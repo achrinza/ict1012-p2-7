@@ -1,0 +1,48 @@
+enable
+config terminal
+
+hostname SW3
+
+<%+ ./partials/common.esh %>
+<% CommonConfigSW %>
+
+vlan <%= $VLAN_MeetingRooms_ID %>
+  name <%= $VLAN_MeetingRooms_NAME %>
+vlan <%= $VLAN_SolutionDevs_ID %>
+ name <%= $VLAN_SolutionDevs_NAME %>
+
+! Assigning end device ports to their respective VLANs
+! (Network Engineers Level 3)
+int range g1/0/1-3
+  switchport mode access
+  switchport nonegotiate
+  switchport access vlan <%= $VLAN_NetworkMGMT_ID %>
+
+! (HR Executive Level 3)
+interface range g1/0/2-3
+  switchport mode access
+  switchport nonegotiate
+  switchport access vlan <%= $VLAN_HumanResources_ID %>
+  
+! (Solutions Developers Department Level 3)
+interface range g1/0/5-9
+  switchport mode access
+  switchport nonegotiate
+  switchport access vlan <%= $VLAN_SolutionDevs_ID %>
+  
+! (Large Meeting Room on Level 4)
+interface range g1/0/10-22
+  switchport mode access
+  switchport nonegotiate
+  switchport access vlan <%= $VLAN_MeetingRooms_ID %>
+
+! 
+interface range g1/0/23-24
+  spanning-tree bpduguard disable
+  switchport mode trunk
+  switchport nonegotiate
+  
+interface range g1/1/1-4
+  shutdown
+
+end

@@ -1,0 +1,65 @@
+enable
+configure terminal
+hostname R2
+
+<%+ ./partials/common.esh %>
+<% CommonConfigAll 97 $R2_Lo1_SUBNET_ADDRESS %>
+
+! === LAN-side: to CSW1 (VLAN 101: 172.16.1.212/30) ===
+interface g0/0/0
+ ip address <%= $VLAN_CSW1_R2_DEFAULT_GATEWAY %> <%= $VLAN_CSW1_R2_SUBNET_MASK %>
+ ip nat inside
+ no shutdown
+exit
+
+! === LAN-side: to CSW2 (VLAN 103: 172.16.1.220/30) ===
+interface g0/0/1
+ ip address <%= $VLAN_CSW2_R2_DEFAULT_GATEWAY %> <%= $VLAN_CSW2_R2_SUBNET_MASK %>
+ ip nat inside
+ no shutdown
+exit
+
+! === WAN-side: to ISP2 === TENTATIVE
+interface g0/1/1
+ ip address <%= $ISP2_ROUTER_IP %> <%= $ISP2_DEFAULT_GATEWAY %>
+ ip nat outside
+ no shutdown
+exit
+
+! === IP SLA ===
+ip route 8.8.8.8 255.255.255.255 <%= $ISP2_DEFAULT_GATEWAY %>
+ip sla 1
+ icmp-echo 8.8.8.8 source-interface lo0
+ frequency 30
+ip sla schedule 1 life forever start-time now
+track 1 ip sla 1 reachability
+
+! === Default Route to ISP2 === TENTATIVE
+ip route 0.0.0.0 0.0.0.0 <%= $ISP2_DEFAULT_GATEWAY %> track 1
+
+! === OSPF ===
+router ospf 1
+ router-id <%= $R2_Lo1_SUBNET_ADDRESS %>
+ passive-interface default
+ no passive-interface g0/0/0
+ no passive-interface g0/0/1
+ network <%= $PRIVATE_NETWORK_SUBNET_ADDRESS %> <%= $PRIVATE_NETWORK_NETWORK_WILDCARD %> area 0
+ default-information originate
+exit
+
+! === NAT ACL ===
+access-list 10 10 permit <%= $ISP2_ROUTER_IP %>
+access-list 10 20 permit <%= $PRIVATE_NETWORK_SUBNET_ADDRESS %> <%= $PRIVATE_NETWORK_NETWORK_WILDCARD %>
+
+! === NAT Pool ===
+! TODO: ISP2 config only seems to accept transit IP?
+ip nat pool snat <%= $ISP2_ROUTER_IP %> <%= $ISP2_ROUTER_IP %> prefix-length 30
+
+! === SNAT (PAT overload on WAN interface) ===
+ip nat inside source list 10 pool snat overload
+
+! === DNAT (Static NAT - Web Server + Auth DNS via ISP2 public IPs) ===
+ip nat inside source static <%= $AuthoritativeDNSServer_IP_ADDRESS_PUBLIC_R2 %> <%= $AuthoritativeDNSServer_IP_ADDRESS %> ! Authoritative DNS
+ip nat inside source static <%= $WebServer_IP_ADDRESS_PUBLIC_R2 %> <%= $WebServer_IP_ADDRESS %> ! Web Server
+
+end

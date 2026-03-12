@@ -1,0 +1,49 @@
+enable
+config terminal
+
+hostname SW1
+
+<%+ ./partials/common.esh %>
+<% CommonConfigSW %>
+
+
+vlan <%= $VLAN_MeetingRooms_ID %>
+  name <%= $VLAN_MeetingRooms_NAME %>
+vlan <%= $VLAN_CustomerService_ID %>
+ name <%= $VLAN_CustomerService_NAME %>
+
+! Assigning end device ports to their respective VLANs
+interface g1/0/1
+  switchport mode access
+  switchport nonegotiate
+  switchport access vlan <%= $VLAN_NetworkMGMT_ID %>
+
+interface g1/0/2
+  switchport mode access
+  switchport nonegotiate
+  switchport access vlan <%= $VLAN_SolutionDevs_ID %>
+
+interface range g1/0/3-14
+  switchport mode access
+  switchport nonegotiate
+  switchport access vlan <%= $VLAN_CustomerService_ID %>
+
+interface range g1/0/15-20
+  switchport mode access
+  switchport nonegotiate
+  switchport access vlan <%= $VLAN_MeetingRooms_ID %>
+
+
+! Trunking Configs
+interface range g1/0/23-24
+  spanning-tree bpduguard disable
+  switchport mode trunk
+  switchport nonegotiate
+  
+interface range g1/0/21-22
+  shutdown
+  
+interface range g1/1/1-4
+  shutdown
+
+end

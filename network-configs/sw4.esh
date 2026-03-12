@@ -1,0 +1,47 @@
+enable
+config terminal
+
+hostname SW4
+
+<%+ ./partials/common.esh %>
+<% CommonConfigSW %>
+
+vlan <%= $VLAN_MeetingRooms_ID %>
+  name <%= $VLAN_MeetingRooms_NAME %>
+vlan <%= $VLAN_CompanyMgmt_ID %>
+  name <%= $VLAN_CompanyMgmt_NAME %>
+
+! Assigning end device ports to their respective VLANs
+! (Network Engineers Level 4)
+interface range g1/0/1
+  switchport mode access
+  switchport nonegotiate
+  switchport access vlan <%= $VLAN_NetworkMGMT_ID %>
+
+! (HR Office Level 4)
+interface range g1/0/2-3 
+  switchport mode access
+  switchport nonegotiate
+  switchport access vlan <%= $VLAN_HumanResources_ID %>
+
+! (Country Manager Office Level 4)
+interface range g1/0/4-7 
+  switchport mode access
+  switchport nonegotiate
+  switchport access vlan <%= $VLAN_CompanyMgmt_ID %>
+
+! (Large Meeting Room on Level 4)
+interface range g1/0/8-22 
+  switchport mode access
+  switchport access vlan <%= $VLAN_MeetingRooms_ID %>
+
+! Trunking configs
+interface range g1/0/23-24
+  spanning-tree bpduguard disable
+  switchport mode trunk
+  switchport nonegotiate
+  
+interface range g1/1/1-4
+  shutdown
+  
+end

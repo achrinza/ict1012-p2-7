@@ -1,0 +1,40 @@
+enable
+config terminal
+
+hostname SW2
+
+<%+ ./partials/common.esh %>
+<% CommonConfigSW %>
+
+vlan <%= $VLAN_SalesMarketing_ID %>
+ name <%= $VLAN_SalesMarketing_NAME %>
+ 
+! Assigning end device ports to their respective VLANs
+interface g1/0/1
+  switchport mode access
+  switchport nonegotiate
+  switchport access vlan <%= $VLAN_NetworkMGMT_ID %>
+
+interface g1/0/2
+  switchport mode access
+  switchport nonegotiate
+  switchport access vlan <%= $VLAN_HumanResources_ID %>
+
+interface range g1/0/3-12
+  switchport mode access
+  switchport nonegotiate
+  switchport access vlan <%= $VLAN_SalesMarketing_ID %>
+
+! Trunking Configs
+interface range g1/0/23-24
+  spanning-tree bpduguard disable
+  switchport mode trunk
+  switchport nonegotiate
+  
+interface range g1/0/13-22
+  shutdown
+  
+interface range g1/1/1-4
+  shutdown
+
+end
