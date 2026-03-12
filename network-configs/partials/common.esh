@@ -41,17 +41,22 @@ ip access-list extended DMZ_Outbound
  10 permit tcp any host $WebServer_IP_ADDRESS eq www 443
  20 permit tcp any host $AuthoritativeDNSServer_IP_ADDRESS eq domain
  30 permit icmp any any
+ 40 permit tcp $VLAN_NetworkMGMT_SUBNET_ADDRESS $VLAN_NetworkMGMT_NETWORK_WILDCARD host $AuthoritativeDNSServer_IP_ADDRESS eq 22 10000
+ 60 permit ip any any reflect DMZ_Outbound_Reflect
 exit
 
 ip access-list extended InternalServices_Outbound
  10 permit udp $PRIVATE_NETWORK_SUBNET_ADDRESS $PRIVATE_NETWORK_NETWORK_WILDCARD eq bootpc host $DHCPServer_IP_ADDRESS eq bootps
  20 permit tcp $PRIVATE_NETWORK_SUBNET_ADDRESS $PRIVATE_NETWORK_NETWORK_WILDCARD host $CachingDNSServer_IP_ADDRESS eq domain
  30 permit icmp any any
+ 40 permit tcp $VLAN_NetworkMGMT_SUBNET_ADDRESS $VLAN_NetworkMGMT_NETWORK_WILDCARD host $CachingDNSServer_IP_ADDRESS eq 22 10000
+ 60 permit ip any any reflect InternalServices_Outbound_Reflect
 exit
 
 ip access-list extended EUC_Outbound
  10 permit udp host $CachingDNSServer_IP_ADDRESS eq bootps $PRIVATE_NETWORK_SUBNET_ADDRESS $PRIVATE_NETWORK_NETWORK_WILDCARD eq bootpc
  20 permit icmp any any
+ 40 permit ip any any reflect EUC_Outbound_Reflect
 exit
 
 ! === Enable IP Routing ===
@@ -87,7 +92,7 @@ no ip domain lookup
 spanning-tree portfast default
 spanning-tree portfast bpduguard default
 
-errdisable revovery cause bpduguard
+errdisable recovery cause bpduguard
 
 vlan $VLAN_NetworkMGMT_ID
  name $VLAN_NetworkMGMT_NAME

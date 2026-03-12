@@ -21,7 +21,7 @@ exit
 
 ! === WAN-side: to ISP2 === TENTATIVE
 interface g0/1/1
- ip address <%= $ISP2_ROUTER_IP %> <%= $ISP2_DEFAULT_GATEWAY %>
+ ip address <%= $ISP2_ROUTER_IP %> <%= $ISP2_SUBNET_MASK %>
  ip nat outside
  no shutdown
 exit
@@ -53,13 +53,13 @@ access-list 10 20 permit <%= $PRIVATE_NETWORK_SUBNET_ADDRESS %> <%= $PRIVATE_NET
 
 ! === NAT Pool ===
 ! TODO: ISP2 config only seems to accept transit IP?
-ip nat pool snat <%= $ISP2_ROUTER_IP %> <%= $ISP2_ROUTER_IP %> prefix-length 30
+ip nat pool snat <%= $ISP2_SNAT_POOL_START_IP %> <%= $ISP2_SNAT_POOL_END_IP %> prefix-length <%= $ISP2_POOL_PREFIX %>
 
 ! === SNAT (PAT overload on WAN interface) ===
 ip nat inside source list 10 pool snat overload
 
 ! === DNAT (Static NAT - Web Server + Auth DNS via ISP2 public IPs) ===
-ip nat inside source static <%= $AuthoritativeDNSServer_IP_ADDRESS_PUBLIC_R2 %> <%= $AuthoritativeDNSServer_IP_ADDRESS %> ! Authoritative DNS
-ip nat inside source static <%= $WebServer_IP_ADDRESS_PUBLIC_R2 %> <%= $WebServer_IP_ADDRESS %> ! Web Server
+ip nat inside source static <%= $AuthoritativeDNSServer_IP_ADDRESS %> <%= $AuthoritativeDNSServer_IP_ADDRESS_PUBLIC_R2 %> ! Authoritative DNS
+ip nat inside source static <%= $WebServer_IP_ADDRESS %> <%= $WebServer_IP_ADDRESS_PUBLIC_R2 %> ! Web Server
 
 end

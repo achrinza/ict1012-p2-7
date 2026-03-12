@@ -27,7 +27,7 @@ interface g0/1/1
 exit
 
 ! === IP SLA ===
-ip route 8.8.8.8 255.255.255.255 
+ip route 8.8.8.8 255.255.255.255 <%= $ISP1_DEFAULT_GATEWAY %>
 ip sla 1
  icmp-echo 8.8.8.8 source-interface lo0
  frequency 30
@@ -48,7 +48,7 @@ router ospf 1
 exit
 
 ! === NAT Pool ===
-ip nat pool snat <%= $ISP1_POOL_START %> <%= $ISP1_POOL_END %> prefix-length <%= $ISP1_POOL_PREFIX %>
+ip nat pool snat <%= $ISP1_SNAT_POOL_START_IP %> <%= $ISP1_SNAT_POOL_END_IP %> prefix-length <%= $ISP1_POOL_PREFIX %>
 
 ! === NAT ACL ===
 access-list 10 10 permit <%= $ISP1_ROUTER_IP %> 0.0.0.0
@@ -58,7 +58,7 @@ access-list 10 20 permit <%= $PRIVATE_NETWORK_SUBNET_ADDRESS %> <%= $PRIVATE_NET
 ip nat inside source list 10 pool snat overload
 
 ! === DNAT (Static NAT - Web Server + Auth DNS via ISP1 public IPs) === TENTATIVE
-ip nat inside source static <%= $AuthoritativeDNSServer_IP_ADDRESS_PUBLIC_R1 %> <%= $AuthoritativeDNSServer_IP_ADDRESS %> ! Authoritative DNS
-ip nat inside source static <%= $WebServer_IP_ADDRESS_PUBLIC_R1 %> <%= $WebServer_IP_ADDRESS %> ! Web Server
+ip nat inside source static <%= $AuthoritativeDNSServer_IP_ADDRESS %> <%= $AuthoritativeDNSServer_IP_ADDRESS_PUBLIC_R1 %> ! Authoritative DNS
+ip nat inside source static <%= $WebServer_IP_ADDRESS %> <%= $WebServer_IP_ADDRESS_PUBLIC_R1 %> ! Web Server
 
 end

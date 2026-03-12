@@ -134,12 +134,21 @@ interface g1/0/24
  no shutdown
 exit
 
+! === Server Access Ports (InternalServices - VLAN <%= $VLAN_InternalServices_ID %>) ===
+interface range g1/0/10
+ switchport mode access
+ switchport nonegotiate
+ switchport access vlan <%= $VLAN_InternalServices_ID %>
+ no shutdown
+exit
+
 ! === Server Access Ports (DMZ - VLAN <%= $VLAN_DMZ_ID %>) ===
-interface range g1/0/10-12
+interface range g1/0/11
  switchport mode access
  switchport nonegotiate
  switchport access vlan <%= $VLAN_DMZ_ID %>
  no shutdown
+exit
 
 ! === OSPF Area 0 ===
 router ospf 1

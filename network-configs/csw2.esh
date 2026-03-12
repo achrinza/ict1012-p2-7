@@ -66,7 +66,7 @@ interface vlan <%= $VLAN_SalesMarketing_ID %>
  no shutdown
  
 interface vlan <%= $VLAN_SolutionDevs_ID %>
- ip address <%= $VLAN_SolutionDevs_SVI1 %> <%= $VLAN_SolutionDevs_SUBNET_MASK %>
+ ip address <%= $VLAN_SolutionDevs_SVI2 %> <%= $VLAN_SolutionDevs_SUBNET_MASK %>
  standby version 2
  standby 5 ip <%= $VLAN_SolutionDevs_DEFAULT_GATEWAY %>
  standby 5 priority 100
@@ -75,7 +75,7 @@ interface vlan <%= $VLAN_SolutionDevs_ID %>
  no shutdown
  
 interface vlan <%= $VLAN_HumanResources_ID %>
- ip address <%= $VLAN_HumanResources_SVI1 %> <%= $VLAN_HumanResources_SUBNET_MASK %>
+ ip address <%= $VLAN_HumanResources_SVI2 %> <%= $VLAN_HumanResources_SUBNET_MASK %>
  standby version 2
  standby 6 ip <%= $VLAN_HumanResources_DEFAULT_GATEWAY %>
  standby 6 priority 100
@@ -84,7 +84,7 @@ interface vlan <%= $VLAN_HumanResources_ID %>
  no shutdown
  
 interface vlan <%= $VLAN_CompanyMgmt_ID %>
- ip address <%= $VLAN_CompanyMgmt_SVI1 %> <%= $VLAN_CompanyMgmt_SUBNET_MASK %>
+ ip address <%= $VLAN_CompanyMgmt_SVI2 %> <%= $VLAN_CompanyMgmt_SUBNET_MASK %>
  standby version 2
  standby 7 ip <%= $VLAN_CompanyMgmt_DEFAULT_GATEWAY %>
  standby 7 priority 100
@@ -93,7 +93,7 @@ interface vlan <%= $VLAN_CompanyMgmt_ID %>
  no shutdown
  
 interface vlan <%= $VLAN_DMZ_ID %>
- ip address <%= $VLAN_DMZ_SVI1 %> <%= $VLAN_DMZ_SUBNET_MASK %>
+ ip address <%= $VLAN_DMZ_SVI2 %> <%= $VLAN_DMZ_SUBNET_MASK %>
  standby version 2
  standby 8 ip <%= $VLAN_DMZ_DEFAULT_GATEWAY %>
  standby 8 priority 100
@@ -101,7 +101,7 @@ interface vlan <%= $VLAN_DMZ_ID %>
  no shutdown
  
 interface vlan <%= $VLAN_InternalServices_ID %>
- ip address <%= $VLAN_InternalServices_SVI1 %> <%= $VLAN_InternalServices_SUBNET_MASK %>
+ ip address <%= $VLAN_InternalServices_SVI2 %> <%= $VLAN_InternalServices_SUBNET_MASK %>
  standby version 2
  standby 9 ip <%= $VLAN_InternalServices_DEFAULT_GATEWAY %>
  standby 9 priority 100
@@ -134,12 +134,21 @@ interface g1/0/24
  no shutdown
 exit
 
+! === Server Access Ports (InternalServices - VLAN <%= $VLAN_InternalServices_ID %>) ===
+interface range g1/0/10
+ switchport mode access
+ switchport nonegotiate
+ switchport access vlan <%= $VLAN_InternalServices_ID %>
+ no shutdown
+exit
+
 ! === Server Access Ports (DMZ - VLAN <%= $VLAN_DMZ_ID %>) ===
-interface range g1/0/10-12
+interface range g1/0/11
  switchport mode access
  switchport nonegotiate
  switchport access vlan <%= $VLAN_DMZ_ID %>
  no shutdown
+exit
 
 ! === OSPF Area 0 ===
 router ospf 1

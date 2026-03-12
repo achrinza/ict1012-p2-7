@@ -12,6 +12,8 @@ vlan <%= $VLAN_MeetingRooms_ID %>
   name <%= $VLAN_MeetingRooms_NAME %>
 vlan <%= $VLAN_CustomerService_ID %>
  name <%= $VLAN_CustomerService_NAME %>
+vlan <%= $VLAN_SolutionDevs_ID %>
+ name <%= $VLAN_SolutionDevs_NAME %>
 
 ! Assigning end device ports to their respective VLANs
 interface g1/0/1
