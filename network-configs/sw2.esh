@@ -29,12 +29,12 @@ interface range g1/0/3-12
 ! Trunking Configs & EtherChannel LACP
 interface g1/0/21
   switchport mode trunk
-  channel-group 3 mode active
+  channel-group 3 mode passive
   no shutdown
 
 interface g1/0/23
   switchport mode trunk
-  channel-group 3 mode active
+  channel-group 3 mode passive
   no shutdown
 
 interface port-channel 3
@@ -45,12 +45,12 @@ interface port-channel 3
 
 interface range g1/0/22
   switchport mode trunk
-  channel-group 4 mode active
+  channel-group 4 mode passive
   no shutdown
 
 interface range g1/0/24
   switchport mode trunk
-  channel-group 4 mode active
+  channel-group 4 mode passive
   no shutdown
 
 interface port-channel 4
