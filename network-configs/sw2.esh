@@ -26,13 +26,39 @@ interface range g1/0/3-12
   switchport nonegotiate
   switchport access vlan <%= $VLAN_SalesMarketing_ID %>
 
-! Trunking Configs
-interface range g1/0/23-24
-  spanning-tree bpduguard disable
+! Trunking Configs & EtherChannel LACP
+interface g1/0/21
+  switchport mode trunk
+  channel-group 3 mode active
+  no shutdown
+
+interface g1/0/23
+  switchport mode trunk
+  channel-group 3 mode active
+  no shutdown
+
+interface port-channel 3
+  spanning-tree bpduguard disable  
+  switchport mode trunk
+  switchport nonegotiate
+
+
+interface range g1/0/22
+  switchport mode trunk
+  channel-group 4 mode active
+  no shutdown
+
+interface range g1/0/24
+  switchport mode trunk
+  channel-group 4 mode active
+  no shutdown
+
+interface port-channel 4
+  spanning-tree bpduguard disable  
   switchport mode trunk
   switchport nonegotiate
   
-interface range g1/0/13-22
+interface range g1/0/13-20
   shutdown
   
 interface range g1/1/1-4
