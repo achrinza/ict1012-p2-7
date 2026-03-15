@@ -2,20 +2,39 @@ enable
 configure terminal
 hostname R2
 
-<%+ ./partials/common.esh %>
-<% CommonConfigAll 97 $R2_Lo1_SUBNET_ADDRESS %>
+<%+ ./partials/common.esh.part %>
+<% CommonConfigAll 97 %>
+<% CommonConfigR $R2Mgmt_IP_ADDRESS %>
 
-! === LAN-side: to CSW1 (VLAN 101: 172.16.1.212/30) ===
+! === DMZ Policy Routing ===
+ip access-list standard DMZ_ISP1_Steering_Sources
+ 10 permit host <%= $AuthoritativeDNSServer_ISP1_IP_ADDRESS %>
+ 20 permit host <%= $WebServer_ISP1_IP_ADDRESS %>
+exit
+
+route-map DMZ_ISP1_CSW1_Steering_Policy permit 10
+ match ip address DMZ_ISP1_Steering_Sources
+ set ip next-hop <%= $VLAN_CSW1_R1_R2_DEFAULT_GATEWAY %>
+exit
+
+route-map DMZ_ISP1_CSW2_Steering_Policy permit 10
+ match ip address DMZ_ISP1_Steering_Sources
+ set ip next-hop <%= $VLAN_CSW2_R1_R2_FIRST_HOST %>
+exit
+
+! === LAN-side: to CSW1 (VLAN <%= $VLAN_CSW1_R1_R2_NAME %>: <%= $VLAN_CSW1_R1_R2_SUBNET_ADDRESS %><%= $VLAN_CSW1_R1_R2_SUBNET_PREFIX_LENGTH %>) ===
 interface g0/0/0
- ip address <%= $VLAN_CSW1_R2_DEFAULT_GATEWAY %> <%= $VLAN_CSW1_R2_SUBNET_MASK %>
+ ip address <%= $VLAN_CSW1_R1_R2_FIRST_HOST %> <%= $VLAN_CSW1_R1_R2_SUBNET_MASK %>
  ip nat inside
+ ip policy route-map DMZ_ISP1_CSW1_Steering_Policy
  no shutdown
 exit
 
-! === LAN-side: to CSW2 (VLAN 103: 172.16.1.220/30) ===
+! === LAN-side: to CSW2 (VLAN <%= $VLAN_CSW2_R1_R2_ID %>: <%= $VLAN_CSW2_R1_R2_SUBNET_ADDRESS %><%= $VLAN_CSW2_R1_R2_SUBNET_PREFIX_LENGTH %>) ===
 interface g0/0/1
- ip address <%= $VLAN_CSW2_R2_DEFAULT_GATEWAY %> <%= $VLAN_CSW2_R2_SUBNET_MASK %>
+ ip address <%= $VLAN_CSW2_R1_R2_DEFAULT_GATEWAY %> <%= $VLAN_CSW2_R1_R2_SUBNET_MASK %>
  ip nat inside
+ ip policy route-map DMZ_ISP1_CSW2_Steering_Policy
  no shutdown
 exit
 
@@ -29,7 +48,7 @@ exit
 ! === IP SLA ===
 ip route 8.8.8.8 255.255.255.255 <%= $ISP2_DEFAULT_GATEWAY %>
 ip sla 1
- icmp-echo 8.8.8.8 source-interface lo0
+ icmp-echo 8.8.8.8
  frequency 30
 ip sla schedule 1 life forever start-time now
 track 1 ip sla 1 reachability
@@ -39,7 +58,7 @@ ip route 0.0.0.0 0.0.0.0 <%= $ISP2_DEFAULT_GATEWAY %> track 1
 
 ! === OSPF ===
 router ospf 1
- router-id <%= $R2_Lo1_SUBNET_ADDRESS %>
+ router-id <%= $R2Mgmt_IP_ADDRESS %>
  passive-interface default
  no passive-interface g0/0/0
  no passive-interface g0/0/1
@@ -59,7 +78,7 @@ ip nat pool snat <%= $ISP2_SNAT_POOL_START_IP %> <%= $ISP2_SNAT_POOL_END_IP %> p
 ip nat inside source list 10 pool snat overload
 
 ! === DNAT (Static NAT - Web Server + Auth DNS via ISP2 public IPs) ===
-ip nat inside source static <%= $AuthoritativeDNSServer_IP_ADDRESS %> <%= $AuthoritativeDNSServer_IP_ADDRESS_PUBLIC_R2 %> ! Authoritative DNS
-ip nat inside source static <%= $WebServer_IP_ADDRESS %> <%= $WebServer_IP_ADDRESS_PUBLIC_R2 %> ! Web Server
+ip nat inside source static <%= $AuthoritativeDNSServer_ISP2_IP_ADDRESS %> <%= $AuthoritativeDNSServer_ISP2_IP_ADDRESS_PUBLIC_R2 %> ! Authoritative DNS
+ip nat inside source static <%= $WebServer_ISP2_IP_ADDRESS %> <%= $WebServer_ISP2_IP_ADDRESS_PUBLIC_R2 %> ! Web Server
 
 end

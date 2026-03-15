@@ -2,16 +2,13 @@ enable
 configure terminal
 hostname CSW2
 
-<%+ ./partials/common.esh %>
-<% CommonConfigAll 98 $CSW2_Lo1_SUBNET_ADDRESS %>
-<% CommonConfigCSW %>
+<%+ ./partials/common.esh.part %>
+<% CommonConfigAll 98 %>
+<% CommonConfigCSW $CSW2Mgmt_IP_ADDRESS %>
 
 ! === VLAN Database ===
-vlan 102
- name R1_CSW2_Link
-vlan 103
- name R2_CSW2_Link
-exit
+vlan <%= $VLAN_CSW2_R1_R2_ID %>
+ name <%= $VLAN_CSW2_R1_R2_NAME %>_Link
 
 ! === Trunk Ports to Access Switches ===
 interface range g1/0/1-8
@@ -149,29 +146,32 @@ interface vlan <%= $VLAN_InternalServices_ID %>
  ip access-group InternalServices_Outbound out
  no shutdown
  
-interface vlan <%= $VLAN_CSW2_R1_ID %>
- ip address <%= $VLAN_CSW2_R1_FIRST_HOST %> <%= $VLAN_CSW2_R1_SUBNET_MASK %>
+interface vlan <%= $VLAN_CSW2_R1_R2_ID %>
+ ip address <%= $VLAN_CSW2_R1_R2_SECOND_HOST %> <%= $VLAN_CSW2_R1_R2_SUBNET_MASK %>
  no shutdown
- 
-interface vlan <%= $VLAN_CSW2_R2_ID %>
- ip address <%= $VLAN_CSW2_R2_FIRST_HOST %> <%= $VLAN_CSW2_R2_SUBNET_MASK %>
- no shutdown
-exit
 
 ! === Access Ports to Routers (uses VLAN SVI method) ===
-! g1/0/23 -> R1 (VLAN <%= $VLAN_CSW2_R1_ID %>)
+! g1/0/23 -> R1 (VLAN <%= $VLAN_CSW2_R1_R2_ID %>)
 interface g1/0/23
  switchport mode access
  switchport nonegotiate
- switchport access vlan <%= $VLAN_CSW2_R1_ID %>
+ switchport access vlan <%= $VLAN_CSW2_R1_R2_ID %>
  no shutdown
 exit
 
-! g1/0/24 -> R2 (VLAN <%= $VLAN_CSW2_R2_ID %>)
+! g1/0/24 -> R2 (VLAN <%= $VLAN_CSW2_R1_R2_ID %>)
 interface g1/0/24
  switchport mode access
  switchport nonegotiate
- switchport access vlan <%= $VLAN_CSW2_R2_ID %>
+ switchport access vlan <%= $VLAN_CSW2_R1_R2_ID %>
+ no shutdown
+exit
+
+! === Server Access Ports (DMZ - VLAN <%= $VLAN_DMZ_ID %>) ===
+interface range g1/0/9
+ switchport mode access
+ switchport nonegotiate
+ switchport access vlan <%= $VLAN_DMZ_ID %>
  no shutdown
 exit
 
@@ -183,24 +183,12 @@ interface range g1/0/10
  no shutdown
 exit
 
-! === Server Access Ports (DMZ - VLAN <%= $VLAN_DMZ_ID %>) ===
-interface range g1/0/11
- switchport mode access
- switchport nonegotiate
- switchport access vlan <%= $VLAN_DMZ_ID %>
- no shutdown
-exit
-
 ! === OSPF Area 0 ===
 router ospf 1
- router-id <%= $CSW2_Lo1_SUBNET_ADDRESS %>
+ router-id <%= $CSW2Mgmt_IP_ADDRESS %>
  passive-interface default
- no passive-interface vlan<%= $VLAN_CSW2_R1_ID %>
- no passive-interface vlan<%= $VLAN_CSW2_R2_ID %>
+ no passive-interface vlan<%= $VLAN_CSW2_R1_R2_ID %>
  network <%= $PRIVATE_NETWORK_SUBNET_ADDRESS %> <%= $PRIVATE_NETWORK_NETWORK_WILDCARD %> area 0
 exit
-
-! === RSTP ===
-! spanning-tree mode rapid-pvst
 
 end

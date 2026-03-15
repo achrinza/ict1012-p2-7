@@ -3,9 +3,9 @@ config terminal
 
 hostname SW3
 
-<%+ ./partials/common.esh %>
-<% CommonConfigAll 98 $SW3_Lo1_SUBNET_ADDRESS %>
-<% CommonConfigSW %>
+<%+ ./partials/common.esh.part %>
+<% CommonConfigAll 98 %>
+<% CommonConfigSW $SW3Mgmt_IP_ADDRESS %>
 
 vlan <%= $VLAN_MeetingRooms_ID %>
   name <%= $VLAN_MeetingRooms_NAME %>
