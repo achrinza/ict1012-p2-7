@@ -1,0 +1,27 @@
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    csw1:
+      match:
+        macaddress: 00:0c:29:A5:1F:30 #TODO: UPDATEME!!!!!
+        set-name: csw1
+    csw2:
+      match:
+        macaddress: 00:0C:29:A5:1F:3A #TODO: UPDATEME!!!!!
+        set-name: csw2
+  bonds:
+    bond0:
+      interfaces:
+        - csw1
+        - csw2
+      parameters:
+        mode: active-backup
+        optional: false
+        addresses:
+          - <%= $AuthoritativeDNSServer_IP_ADDRESS %><%= $VLAN_DMZ_SUBNET_PREFIX_LENGTH %>
+          - <%= $AuthoritativeDNSServer_ISP1_IP_ADDRESS %><%= $VLAN_DMZ_SUBNET_PREFIX_LENGTH %>
+          - <%= $AuthoritativeDNSServer_ISP2_IP_ADDRESS %><%= $VLAN_DMZ_SUBNET_PREFIX_LENGTH %>
+        routes:
+          - to: default
+            via: <%= $VLAN_DMZ_DEFAULT_GATEWAY %>

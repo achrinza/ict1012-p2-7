@@ -1,7 +1,6 @@
 <%
 CommonConfigAll () {
-  vtyMax=$1
-  Lo1SubnetAddress=$2
+  vtyMax="$1"
   cat <<EOF
 
 no ip domain lookup
@@ -26,23 +25,32 @@ line vty 0 $1
  login local
 exit
 
+EOF
+}
+
+CommonConfigR () {
+  Lo1SubnetAddress="$1"
+  cat <<EOF
 interface lo0
  ip address $Lo1SubnetAddress 255.255.255.255
  ip nat inside
 exit
-
 EOF
 }
 
 CommonConfigCSW () {
+  mgmtIPAddress="$1"
+  
   cat <<EOF
 ! === Access List ===
 ip access-list extended DMZ_Outbound
- 10 permit tcp any host $WebServer_IP_ADDRESS eq www 443
- 20 permit tcp any host $AuthoritativeDNSServer_IP_ADDRESS eq domain
- 30 permit icmp any any
- 40 permit tcp $VLAN_NetworkMGMT_SUBNET_ADDRESS $VLAN_NetworkMGMT_NETWORK_WILDCARD host $AuthoritativeDNSServer_IP_ADDRESS eq 22 10000
- 60 permit ip any any reflect DMZ_Outbound_Reflect
+ 10 permit tcp any host $AuthoritativeDNSServer_ISP1_IP_ADDRESS eq domain
+ 20 permit tcp any host $AuthoritativeDNSServer_ISP2_IP_ADDRESS eq domain
+ 30 permit tcp any host $WebServer_ISP1_IP_ADDRESS eq www 443
+ 40 permit tcp any host $WebServer_ISP2_IP_ADDRESS eq www 443
+ 50 permit icmp any any
+ 60 permit tcp $VLAN_NetworkMGMT_SUBNET_ADDRESS $VLAN_NetworkMGMT_NETWORK_WILDCARD host $AuthoritativeDNSServer_IP_ADDRESS eq 22 10000
+ 70 permit ip any any reflect DMZ_Outbound_Reflect
 exit
 
 ip access-list extended InternalServices_Outbound
@@ -81,11 +89,20 @@ vlan $VLAN_DMZ_ID
  name $VLAN_DMZ_NAME
 vlan $VLAN_InternalServices_ID
  name $VLAN_InternalServices_NAME
+vlan $VLAN_MGMT_ID
+ name $VLAN_MGMT_NAME
+exit
+
+! == Remote Management Interface ==
+interface vlan 100
+ ip address $mgmtIPAddress $VLAN_MGMT_SUBNET_MASK
+ no autostate
 exit
 EOF
 }
 
 CommonConfigSW () {
+  mgmtIPAddress="$1"
   cat <<EOF
 no ip domain lookup
 
@@ -94,10 +111,22 @@ spanning-tree portfast bpduguard default
 
 errdisable recovery cause bpduguard
 
+! === Enable IP Routing ===
+ip routing
+
+! === VLAN Database ===
 vlan $VLAN_NetworkMGMT_ID
  name $VLAN_NetworkMGMT_NAME
 vlan $VLAN_HumanResources_ID
   name $VLAN_HumanResources_NAME
+vlan $VLAN_MGMT_ID
+ name $VLAN_MGMT_NAME
+exit
+
+! == Remote Management Interface ==
+interface vlan 100
+ ip address $mgmtIPAddress $VLAN_MGMT_SUBNET_MASK
+ no autostate
 exit
 EOF
 }

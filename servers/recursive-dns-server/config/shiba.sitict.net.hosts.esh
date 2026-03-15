@@ -1,0 +1,12 @@
+$TTL 3600
+$ORIGIN shiba.sitict.net.
+@        IN      SOA    ns-cache.shiba.sitict.net. admin.shiba.sitict.net. (
+                        2026031306
+                        3600
+                        600
+                        1209600
+                        3600 )
+         IN      NS      ns-cache.shiba.sitict.net.
+         IN      A       <%= $WebServer_IP_ADDRESS %>
+ns-cache IN      A       <%= $CachingDNSServer_IP_ADDRESS %>
+www      IN      CNAME   shiba.sitict.net.

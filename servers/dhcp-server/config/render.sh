@@ -2,7 +2,7 @@
 
 find *.esh -exec /bin/sh -c '
 render_file () {
-    vars="$(cat ./partials/vars.sh)"
+    vars="$(cat ../../../partials/vars.sh)"
     filename="$1"
     filename_plain="$(echo $filename | sed s/....$//)"
     esh -o $filename_plain $filename $vars

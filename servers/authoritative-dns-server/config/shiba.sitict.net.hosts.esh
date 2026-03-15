@@ -1,0 +1,16 @@
+$TTL 3600
+$ORIGIN shiba.sitict.net.
+
+@       IN      SOA     ns1.shiba.sitict.net. admin.shiba.sitict.net. (
+                        2026031312
+                        3600
+                        600
+                        1209600
+                        3600 )
+        IN      NS      ns1.shiba.sitict.net.
+        IN      NS      ns2.shiba.sitict.net.
+        IN      A       <%= $WebServer_ISP1_IP_ADDRESS_PUBLIC_R1 %>
+        IN      A       <%= $WebServer_ISP2_IP_ADDRESS_PUBLIC_R2 %>
+ns1     IN      A       <%= $AuthoritativeDNSServer_ISP1_IP_ADDRESS_PUBLIC_R1 %>
+ns2     IN      A       <%= $AuthoritativeDNSServer_ISP2_IP_ADDRESS_PUBLIC_R2 %>
+www     IN      CNAME   shiba.sitict.net.

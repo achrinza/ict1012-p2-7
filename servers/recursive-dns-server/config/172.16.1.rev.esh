@@ -1,0 +1,65 @@
+<%
+last_octet () {
+  printf '%s' "$1" | awk -F. '{ORS=""; print $4}'
+}
+-%>
+$TTL 3600
+$ORIGIN <% printf '%s' "$PRIVATE_NETWORK_SUBNET_ADDRESS" | awk -F. '{ORS=""; print $4"."$3"."$2}' %>.in-addr.arpa.
+
+@        IN      SOA    ns-cache.shiba.sitict.net. admin.shiba.sitict.net. (
+                        2026031302
+                        3600
+                        600
+                        1209600
+                        3600 )
+
+         IN      NS      ns-cache.shiba.sitict.net.
+188      IN      PTR     ns-cache.shiba.sitict.net.
+
+<% last_octet $ISP1_ROUTER_IP %>                        IN      A       r1
+<% last_octet $VLAN_CSW1_R1_R2_DEFAULT_GATEWAY %>       IN      A       r1
+<% last_octet $VLAN_CSW2_R1_R2_FIRST_HOST %>            IN      A       r1
+
+<% last_octet $ISP2_ROUTER_IP %>                        IN      A       r2
+<% last_octet $VLAN_CSW1_R1_R2_FIRST_HOST %>            IN      A       r2
+<% last_octet $VLAN_CSW2_R1_R2_DEFAULT_GATEWAY %>       IN      A       r2
+
+<% last_octet $VLAN_MeetingRooms_DEFAULT_GATEWAY %>     IN      A       csw-vip
+<% last_octet $VLAN_NetworkMGMT_DEFAULT_GATEWAY %>      IN      A       csw-vip
+<% last_octet $VLAN_CustomerService_DEFAULT_GATEWAY %>  IN      A       csw-vip
+<% last_octet $VLAN_SalesMarketing_DEFAULT_GATEWAY %>   IN      A       csw-vip
+<% last_octet $VLAN_SolutionDevs_DEFAULT_GATEWAY %>     IN      A       csw-vip
+<% last_octet $VLAN_HumanResources_DEFAULT_GATEWAY %>   IN      A       csw-vip
+<% last_octet $VLAN_CompanyMgmt_DEFAULT_GATEWAY %>      IN      A       csw-vip
+<% last_octet $VLAN_DMZ_DEFAULT_GATEWAY %>              IN      A       csw-vip
+<% last_octet $VLAN_InternalServices_DEFAULT_GATEWAY %> IN      A       csw-vip
+<% last_octet $VLAN_MGMT_DEFAULT_GATEWAY %>             IN      A       csw-vip
+         
+<% last_octet $VLAN_CSW1_R1_R2_SECOND_HOST %>           IN      A       csw1
+<% last_octet $VLAN_MeetingRooms_SVI1 %>                IN      A       csw1
+<% last_octet $VLAN_NetworkMGMT_SVI1 %>                 IN      A       csw1
+<% last_octet $VLAN_CustomerService_SVI1 %>             IN      A       csw1
+<% last_octet $VLAN_SalesMarketing_SVI1 %>              IN      A       csw1
+<% last_octet $VLAN_SolutionDevs_SVI1 %>                IN      A       csw1
+<% last_octet $VLAN_HumanResources_SVI1 %>              IN      A       csw1
+<% last_octet $VLAN_CompanyMgmt_SVI1 %>                 IN      A       csw1
+<% last_octet $VLAN_DMZ_SVI1 %>                         IN      A       csw1
+<% last_octet $VLAN_InternalServices_SVI1 %>            IN      A       csw1
+<% last_octet $CSW1Mgmt_IP_ADDRESS %>                   IN      A       csw1
+
+<% last_octet $VLAN_CSW2_R1_R2_SECOND_HOST %>           IN      A       csw2
+<% last_octet $VLAN_MeetingRooms_SVI2 %>                IN      A       csw2
+<% last_octet $VLAN_NetworkMGMT_SVI2 %>                 IN      A       csw2
+<% last_octet $VLAN_CustomerService_SVI2 %>             IN      A       csw2
+<% last_octet $VLAN_SalesMarketing_SVI2 %>              IN      A       csw2
+<% last_octet $VLAN_SolutionDevs_SVI2 %>                IN      A       csw2
+<% last_octet $VLAN_HumanResources_SVI2 %>              IN      A       csw2
+<% last_octet $VLAN_CompanyMgmt_SVI2 %>                 IN      A       csw2
+<% last_octet $VLAN_DMZ_SVI2 %>                         IN      A       csw2
+<% last_octet $VLAN_InternalServices_SVI2 %>            IN      A       csw2
+<% last_octet $CSW2Mgmt_IP_ADDRESS %>                   IN      A       csw2
+
+<% last_octet $SW1Mgmt_IP_ADDRESS %>                    IN      A       sw1
+<% last_octet $SW2Mgmt_IP_ADDRESS %>                    IN      A       sw2
+<% last_octet $SW3Mgmt_IP_ADDRESS %>                    IN      A       sw3
+<% last_octet $SW4Mgmt_IP_ADDRESS %>                    IN      A       sw4
