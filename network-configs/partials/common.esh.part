@@ -38,8 +38,6 @@ EOF
 }
 
 CommonConfigCSW () {
-  mgmtIPAddress="$1"
-  
   cat <<EOF
 ! === Access List ===
 ip access-list extended DMZ_Outbound
@@ -93,13 +91,6 @@ vlan $VLAN_InternalServices_ID
 vlan $VLAN_MGMT_ID
  name $VLAN_MGMT_NAME
 exit
-
-! == Remote Management Interface ==
-interface vlan $VLAN_MGMT_ID
- ip address $mgmtIPAddress $VLAN_MGMT_SUBNET_MASK
- ip access-group NetMgmt_Inbound out
- no autostate
-exit
 EOF
 }
 
@@ -128,8 +119,9 @@ exit
 ! == Remote Management Interface ==
 interface vlan $VLAN_MGMT_ID
  ip address $mgmtIPAddress $VLAN_MGMT_SUBNET_MASK
- no autostate
 exit
+
+ip route 0.0.0.0 0.0.0.0 $VLAN_MGMT_DEFAULT_GATEWAY
 EOF
 }
 -%>

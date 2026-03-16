@@ -4,7 +4,7 @@ hostname CSW2
 
 <%+ ./partials/common.esh.part %>
 <% CommonConfigAll 98 %>
-<% CommonConfigCSW $CSW2Mgmt_IP_ADDRESS %>
+<% CommonConfigCSW %>
 
 ! === VLAN Database ===
 vlan <%= $VLAN_CSW2_R1_R2_ID %>
@@ -104,7 +104,17 @@ interface vlan <%= $VLAN_InternalServices_ID %>
  standby 9 priority 100
  ip access-group InternalServices_Outbound out
  no shutdown
- 
+
+! == Remote Management Interface ==
+interface vlan <%= $VLAN_MGMT_ID %>
+ ip address <%= $VLAN_MGMT_SVI2 %> <%= $VLAN_MGMT_SUBNET_MASK %>
+ standby version 2
+ standby 10 ip <%= $VLAN_MGMT_DEFAULT_GATEWAY %>
+ standby 10 priority 100
+ ip helper-address <%= $DHCPServer_IP_ADDRESS %>
+ ip access-group NetMgmt_Outbound out
+exit
+
 interface vlan <%= $VLAN_CSW2_R1_R2_ID %>
  ip address <%= $VLAN_CSW2_R1_R2_SECOND_HOST %> <%= $VLAN_CSW2_R1_R2_SUBNET_MASK %>
  no shutdown
