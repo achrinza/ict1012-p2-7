@@ -7,6 +7,8 @@ hostname SW2
 <% CommonConfigAll 98 %>
 <% CommonConfigSW $SW2Mgmt_IP_ADDRESS %>
 
+vlan <%= $VLAN_MeetingRooms_ID %>
+  name <%= $VLAN_MeetingRooms_NAME %>
 vlan <%= $VLAN_SalesMarketing_ID %>
  name <%= $VLAN_SalesMarketing_NAME %>
  
@@ -26,13 +28,14 @@ interface range g1/0/3-12
   switchport nonegotiate
   switchport access vlan <%= $VLAN_SalesMarketing_ID %>
 
-! Trunking Configs & EtherChannel LACP
-interface g1/0/21
-  switchport mode trunk
-  channel-group 3 mode passive
-  no shutdown
+! (Large Meeting Room on Level 4)
+interface range g1/0/10-20
+  switchport mode access
+  switchport nonegotiate
+  switchport access vlan <%= $VLAN_MeetingRooms_ID %>
 
-interface g1/0/23
+! Trunking Configs & EtherChannel LACP
+interface g1/0/21,g1/0/23
   switchport mode trunk
   channel-group 3 mode passive
   no shutdown
@@ -43,12 +46,7 @@ interface port-channel 3
   switchport nonegotiate
 
 
-interface range g1/0/22
-  switchport mode trunk
-  channel-group 4 mode passive
-  no shutdown
-
-interface range g1/0/24
+interface range g1/0/22,g1/0/24
   switchport mode trunk
   channel-group 4 mode passive
   no shutdown
