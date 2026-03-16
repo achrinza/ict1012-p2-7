@@ -1,4 +1,4 @@
-shared-network office1 {
+group {
   option domain-name-servers <%= $CachingDNSServer_IP_ADDRESS %>;
   
   subnet <%= $VLAN_InternalServices_SUBNET_ADDRESS %> netmask <%= $VLAN_InternalServices_SUBNET_MASK %> {

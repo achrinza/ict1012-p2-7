@@ -4,11 +4,11 @@ network:
   ethernets:
     csw1:
       match:
-        macaddress: 00:0c:29:A5:1F:30 #TODO: UPDATEME!!!!!
+        macaddress: 00:0c:29:37:9A:01
         set-name: csw1
     csw2:
       match:
-        macaddress: 00:0C:29:A5:1F:3A #TODO: UPDATEME!!!!!
+        macaddress: 00:0C:29:37:9A:0B
         set-name: csw2
   bonds:
     bond0:
