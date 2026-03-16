@@ -10,7 +10,7 @@ ip domain name $DOMAIN_SUFFIX_NET_MGMT
 
 crypto key generate rsa
 
-ip access-list standard NetMgmt_Inbound
+ip access-list standard NetMgmt_Outbound
  10 permit $VLAN_NetworkMGMT_SUBNET_ADDRESS $VLAN_NetworkMGMT_NETWORK_WILDCARD
 exit
 
@@ -21,7 +21,7 @@ line vty 0 $1
  transport input ssh
  transport output ssh
  exec-timeout 20 0
- access-class NetMgmt_Inbound in
+ access-class NetMgmt_Outbound in
  login local
 exit
 
@@ -44,13 +44,15 @@ CommonConfigCSW () {
   cat <<EOF
 ! === Access List ===
 ip access-list extended DMZ_Outbound
- 10 permit tcp any host $AuthoritativeDNSServer_ISP1_IP_ADDRESS eq domain
- 20 permit tcp any host $AuthoritativeDNSServer_ISP2_IP_ADDRESS eq domain
- 30 permit tcp any host $WebServer_ISP1_IP_ADDRESS eq www 443
- 40 permit tcp any host $WebServer_ISP2_IP_ADDRESS eq www 443
- 50 permit icmp any any
- 60 permit tcp $VLAN_NetworkMGMT_SUBNET_ADDRESS $VLAN_NetworkMGMT_NETWORK_WILDCARD host $AuthoritativeDNSServer_IP_ADDRESS eq 22 10000
- 70 permit ip any any reflect DMZ_Outbound_Reflect
+ 10 permit tcp $PRIVATE_NETWORK_SUBNET_ADDRESS $PRIVATE_NETWORK_NETWORK_WILDCARD host $AuthoritativeDNSServer_IP_ADDRESS eq domain
+ 20 permit tcp any host $AuthoritativeDNSServer_ISP1_IP_ADDRESS eq domain
+ 30 permit tcp any host $AuthoritativeDNSServer_ISP2_IP_ADDRESS eq domain
+ 40 permit tcp $PRIVATE_NETWORK_SUBNET_ADDRESS $PRIVATE_NETWORK_NETWORK_WILDCARD host $WebServer_IP_ADDRESS eq www 443
+ 50 permit tcp any host $WebServer_ISP1_IP_ADDRESS eq www 443
+ 60 permit tcp any host $WebServer_ISP2_IP_ADDRESS eq www 443
+ 70 permit icmp any any
+ 80 permit tcp $VLAN_NetworkMGMT_SUBNET_ADDRESS $VLAN_NetworkMGMT_NETWORK_WILDCARD host $AuthoritativeDNSServer_IP_ADDRESS eq 22 10000
+ 90 permit ip any any reflect DMZ_Outbound_Reflect
 exit
 
 ip access-list extended InternalServices_Outbound
@@ -94,8 +96,9 @@ vlan $VLAN_MGMT_ID
 exit
 
 ! == Remote Management Interface ==
-interface vlan 100
+interface vlan $VLAN_MGMT_ID
  ip address $mgmtIPAddress $VLAN_MGMT_SUBNET_MASK
+ ip access-group NetMgmt_Inbound out
  no autostate
 exit
 EOF
