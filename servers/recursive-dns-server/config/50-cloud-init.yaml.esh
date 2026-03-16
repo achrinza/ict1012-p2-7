@@ -23,3 +23,6 @@ network:
       routes:
         - to: default
           via: <%= $VLAN_InternalServices_DEFAULT_GATEWAY %>
+      nameservers:
+        addresses:
+          - <%= $CachingDNSServer_IP_ADDRESS %>
