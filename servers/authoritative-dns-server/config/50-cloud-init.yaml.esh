@@ -17,11 +17,11 @@ network:
         - csw2
       parameters:
         mode: active-backup
-        optional: false
-        addresses:
-          - <%= $AuthoritativeDNSServer_IP_ADDRESS %><%= $VLAN_DMZ_SUBNET_PREFIX_LENGTH %>
-          - <%= $AuthoritativeDNSServer_ISP1_IP_ADDRESS %><%= $VLAN_DMZ_SUBNET_PREFIX_LENGTH %>
-          - <%= $AuthoritativeDNSServer_ISP2_IP_ADDRESS %><%= $VLAN_DMZ_SUBNET_PREFIX_LENGTH %>
-        routes:
-          - to: default
-            via: <%= $VLAN_DMZ_DEFAULT_GATEWAY %>
+      optional: false
+      addresses:
+        - <%= $AuthoritativeDNSServer_IP_ADDRESS %><%= $VLAN_DMZ_SUBNET_PREFIX_LENGTH %>
+        - <%= $AuthoritativeDNSServer_ISP1_IP_ADDRESS %><%= $VLAN_DMZ_SUBNET_PREFIX_LENGTH %>
+        - <%= $AuthoritativeDNSServer_ISP2_IP_ADDRESS %><%= $VLAN_DMZ_SUBNET_PREFIX_LENGTH %>
+      routes:
+        - to: default
+          via: <%= $VLAN_DMZ_DEFAULT_GATEWAY %>
