@@ -1,39 +1,35 @@
-subnet 0.0.0.0 netmask 0.0.0.0 {
+shared-network office1 {
   option domain-name-servers <%= $CachingDNSServer_IP_ADDRESS %>;
+  
+  subnet <%= $VLAN_InternalServices_SUBNET_ADDRESS %> netmask <%= $VLAN_InternalServices_SUBNET_MASK %> {
+  }
 
-  pool {
+  subnet <%= $VLAN_MeetingRooms_SUBNET_ADDRESS %> netmask <%= $VLAN_MeetingRooms_SUBNET_MASK %> {
     option routers <%= $VLAN_MeetingRooms_DEFAULT_GATEWAY %>;
     range <%= $VLAN_MeetingRooms_FIRST_HOST %> <%= $VLAN_MeetingRooms_LAST_HOST %>;
-    option subnet-mask <%= $VLAN_MeetingRooms_SUBNET_ADDRESS %>;
   }
-  pool {
+  subnet <%= $VLAN_NetworkMGMT_SUBNET_ADDRESS %> netmask <%= $VLAN_NetworkMGMT_SUBNET_MASK %> {
     option routers <%= $VLAN_NetworkMGMT_DEFAULT_GATEWAY %>;
     range <%= $VLAN_NetworkMGMT_FIRST_HOST %> <%= $VLAN_NetworkMGMT_LAST_HOST %>;
-    option subnet-mask <%= $VLAN_NetworkMGMT_SUBNET_ADDRESS %>;
   }
-  pool {
+  subnet <%= $VLAN_CustomerService_SUBNET_ADDRESS %> netmask <%= $VLAN_CustomerService_SUBNET_MASK %> {
     option routers <%= $VLAN_CustomerService_DEFAULT_GATEWAY %>;
     range <%= $VLAN_CustomerService_FIRST_HOST %> <%= $VLAN_CustomerService_LAST_HOST %>;
-    option subnet-mask <%= $VLAN_CustomerService_SUBNET_ADDRESS %>;
   }
-  pool {
+  subnet <%= $VLAN_SalesMarketing_SUBNET_ADDRESS %> netmask <%= $VLAN_SalesMarketing_SUBNET_MASK %> {
     option routers <%= $VLAN_SalesMarketing_DEFAULT_GATEWAY %>;
     range <%= $VLAN_SalesMarketing_FIRST_HOST %> <%= $VLAN_SalesMarketing_LAST_HOST %>;
-    option subnet-mask <%= $VLAN_SalesMarketing_SUBNET_ADDRESS %>;
   }
-  pool {
+  subnet <%= $VLAN_SolutionDevs_SUBNET_ADDRESS %> netmask <%= $VLAN_SolutionDevs_SUBNET_MASK %> {
     option routers <%= $VLAN_SolutionDevs_DEFAULT_GATEWAY %>;
     range <%= $VLAN_SolutionDevs_FIRST_HOST %> <%= $VLAN_SolutionDevs_LAST_HOST %>;
-    option subnet-mask <%= $VLAN_SolutionDevs_SUBNET_ADDRESS %>;
   }
-  pool {
+  subnet <%= $VLAN_HumanResources_SUBNET_ADDRESS %> netmask <%= $VLAN_HumanResources_SUBNET_MASK %> {
     option routers <%= $VLAN_HumanResources_DEFAULT_GATEWAY %>;
     range <%= $VLAN_HumanResources_FIRST_HOST %> <%= $VLAN_HumanResources_LAST_HOST %>;
-    option subnet-mask <%= $VLAN_HumanResources_SUBNET_ADDRESS %>;
   }
-  pool {
+  subnet <%= $VLAN_InternalServices_SUBNET_ADDRESS %> netmask <%= $VLAN_InternalServices_SUBNET_MASK %> {
     option routers <%= $VLAN_InternalServices_DEFAULT_GATEWAY %>;
     range <%= $VLAN_InternalServices_FIRST_HOST %> <%= $VLAN_InternalServices_LAST_HOST %>;
-    option subnet-mask <%= $VLAN_InternalServices_SUBNET_ADDRESS %>;
   }
 }
