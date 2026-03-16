@@ -25,3 +25,6 @@ network:
       routes:
         - to: default
           via: <%= $VLAN_DMZ_DEFAULT_GATEWAY %>
+      nameservers:
+        addresses:
+          - <%= $CachingDNSServer_IP_ADDRESS %>

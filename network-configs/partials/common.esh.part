@@ -3,10 +3,9 @@ CommonConfigAll () {
   vtyMax="$1"
   cat <<EOF
 
-no ip domain lookup
-
 ! === Remote Management ===
 ip domain name $DOMAIN_SUFFIX_NET_MGMT
+ip name-server $CachingDNSServer_IP_ADDRESS
 
 crypto key generate rsa
 
@@ -127,7 +126,7 @@ vlan $VLAN_MGMT_ID
 exit
 
 ! == Remote Management Interface ==
-interface vlan 100
+interface vlan $VLAN_MGMT_ID
  ip address $mgmtIPAddress $VLAN_MGMT_SUBNET_MASK
  no autostate
 exit
