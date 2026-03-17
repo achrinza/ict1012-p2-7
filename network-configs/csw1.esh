@@ -6,15 +6,9 @@ hostname DSW1
 <% CommonConfigAll 98 %>
 <% CommonConfigDSW %>
 
-! === VLAN Database ===
-vlan <%= $VLAN_DSW1_R1_R2_ID %>
- name <%= $VLAN_DSW1_R1_R2_NAME %>_Link
-exit
-
 ! === Trunk Ports to Access Switches ===
 interface range g1/0/1-8
  switchport mode trunk
- no shutdown
 exit
 
 interface g1/0/1
@@ -64,7 +58,6 @@ interface port-channel 7
 interface g1/0/22
  switchport mode trunk
  switchport nonegotiate
- no shutdown
 exit
 
 ! === SVIs (Inter-VLAN Routing) & HSRP ===
@@ -75,7 +68,6 @@ interface vlan <%= $VLAN_MeetingRooms_ID %>
  standby 1 priority 150
  ip helper-address <%= $DHCPServer_IP_ADDRESS %>
  ip access-group EUC_Outbound out
- no shutdown
  
 interface vlan <%= $VLAN_NetworkMGMT_ID %>
  ip address <%= $VLAN_NetworkMGMT_SVI1 %> <%= $VLAN_NetworkMGMT_SUBNET_MASK %>
@@ -84,7 +76,6 @@ interface vlan <%= $VLAN_NetworkMGMT_ID %>
  standby 2 priority 150
  ip helper-address <%= $DHCPServer_IP_ADDRESS %>
  ip access-group EUC_Outbound out
- no shutdown
  
 interface vlan <%= $VLAN_CustomerService_ID %>
  ip address <%= $VLAN_CustomerService_SVI1 %> <%= $VLAN_CustomerService_SUBNET_MASK %>
@@ -93,7 +84,6 @@ interface vlan <%= $VLAN_CustomerService_ID %>
  standby 3 priority 150
  ip helper-address <%= $DHCPServer_IP_ADDRESS %>
  ip access-group EUC_Outbound out
- no shutdown
  
 interface vlan <%= $VLAN_SalesMarketing_ID %>
  ip address <%= $VLAN_SalesMarketing_SVI1 %> <%= $VLAN_SalesMarketing_SUBNET_MASK %>
@@ -102,7 +92,6 @@ interface vlan <%= $VLAN_SalesMarketing_ID %>
  standby 4 priority 150
  ip helper-address <%= $DHCPServer_IP_ADDRESS %>
  ip access-group EUC_Outbound out
- no shutdown
  
 interface vlan <%= $VLAN_SolutionDevs_ID %>
  ip address <%= $VLAN_SolutionDevs_SVI1 %> <%= $VLAN_SolutionDevs_SUBNET_MASK %>
@@ -111,7 +100,6 @@ interface vlan <%= $VLAN_SolutionDevs_ID %>
  standby 5 priority 150
  ip helper-address <%= $DHCPServer_IP_ADDRESS %>
  ip access-group EUC_Outbound out
- no shutdown
  
 interface vlan <%= $VLAN_HumanResources_ID %>
  ip address <%= $VLAN_HumanResources_SVI1 %> <%= $VLAN_HumanResources_SUBNET_MASK %>
@@ -120,7 +108,6 @@ interface vlan <%= $VLAN_HumanResources_ID %>
  standby 6 priority 150
  ip helper-address <%= $DHCPServer_IP_ADDRESS %>
  ip access-group EUC_Outbound out
- no shutdown
  
 interface vlan <%= $VLAN_CompanyMgmt_ID %>
  ip address <%= $VLAN_CompanyMgmt_SVI1 %> <%= $VLAN_CompanyMgmt_SUBNET_MASK %>
@@ -129,7 +116,6 @@ interface vlan <%= $VLAN_CompanyMgmt_ID %>
  standby 7 priority 150
  ip helper-address <%= $DHCPServer_IP_ADDRESS %>
  ip access-group EUC_Outbound out
- no shutdown
  
 interface vlan <%= $VLAN_DMZ_ID %>
  ip address <%= $VLAN_DMZ_SVI1 %> <%= $VLAN_DMZ_SUBNET_MASK %>
@@ -137,7 +123,6 @@ interface vlan <%= $VLAN_DMZ_ID %>
  standby 8 ip <%= $VLAN_DMZ_DEFAULT_GATEWAY %>
  standby 8 priority 150
  ip access-group DMZ_Outbound out
- no shutdown
  
 interface vlan <%= $VLAN_InternalServices_ID %>
  ip address <%= $VLAN_InternalServices_SVI1 %> <%= $VLAN_InternalServices_SUBNET_MASK %>
@@ -145,7 +130,6 @@ interface vlan <%= $VLAN_InternalServices_ID %>
  standby 9 ip <%= $VLAN_InternalServices_DEFAULT_GATEWAY %>
  standby 9 priority 150
  ip access-group InternalServices_Outbound out
- no shutdown
 
 ! == Remote Management Interface ==
 interface vlan <%= $VLAN_MGMT_ID %>
@@ -159,7 +143,11 @@ exit
 
 interface vlan <%= $VLAN_DSW1_R1_R2_ID %>
  ip address <%= $VLAN_DSW1_R1_R2_SECOND_HOST %> <%= $VLAN_DSW1_R1_R2_SUBNET_MASK %>
- no shutdown
+exit
+
+interface vlan <%= $VLAN_DSW2_R1_R2_ID %>
+ ip address <%= $VLAN_DSW2_R1_R2_THIRD_HOST %> <%= $VLAN_DSW2_R1_R2_SUBNET_MASK %>
+exit
 
 ! === Access Ports to Routers (uses VLAN SVI method) ===
 ! g1/0/23 -> R1 (VLAN <%= $VLAN_DSW1_R1_R2_ID %>)
@@ -167,7 +155,6 @@ interface g1/0/23
  switchport mode access
  switchport nonegotiate
  switchport access vlan <%= $VLAN_DSW1_R1_R2_ID %>
- no shutdown
 exit
 
 ! g1/0/24 -> R2 (VLAN <%= $VLAN_DSW1_R1_R2_ID %>)
@@ -175,7 +162,6 @@ interface g1/0/24
  switchport mode access
  switchport nonegotiate
  switchport access vlan <%= $VLAN_DSW1_R1_R2_ID %>
- no shutdown
 exit
 
 ! === Server Access Ports (DMZ - VLAN <%= $VLAN_DMZ_ID %>) ===
@@ -183,7 +169,6 @@ interface range g1/0/9
  switchport mode access
  switchport nonegotiate
  switchport access vlan <%= $VLAN_DMZ_ID %>
- no shutdown
 exit
 
 ! === Server Access Ports (InternalServices - VLAN <%= $VLAN_InternalServices_ID %>) ===
@@ -191,7 +176,6 @@ interface range g1/0/10
  switchport mode access
  switchport nonegotiate
  switchport access vlan <%= $VLAN_InternalServices_ID %>
- no shutdown
 exit
 
 ! === Spanning Tree Root Balancing ===
@@ -203,6 +187,7 @@ router ospf 1
  router-id <%= $DSW1Mgmt_IP_ADDRESS %>
  passive-interface default
  no passive-interface vlan<%= $VLAN_DSW1_R1_R2_ID %>
+ no passive-interface vlan<%= $VLAN_DSW2_R1_R2_ID %>
  network <%= $PRIVATE_NETWORK_SUBNET_ADDRESS %> <%= $PRIVATE_NETWORK_NETWORK_WILDCARD %> area 0
 exit
 

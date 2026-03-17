@@ -90,6 +90,10 @@ vlan $VLAN_InternalServices_ID
  name $VLAN_InternalServices_NAME
 vlan $VLAN_MGMT_ID
  name $VLAN_MGMT_NAME
+vlan $VLAN_DSW1_R1_R2_ID
+ name ${VLAN_DSW1_R1_R2_NAME}_Link
+vlan $VLAN_DSW2_R1_R2_ID
+ name ${VLAN_DSW2_R1_R2_NAME}_Link
 exit
 EOF
 }

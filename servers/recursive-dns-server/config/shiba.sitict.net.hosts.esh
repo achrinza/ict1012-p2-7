@@ -8,5 +8,7 @@ $ORIGIN shiba.sitict.net.
                         3600 )
          IN      NS      ns-cache.shiba.sitict.net.
          IN      A       <%= $WebServer_IP_ADDRESS %>
+         IN      A       <%= $WebServer_ISP1_IP_ADDRESS %>
+         IN      A       <%= $WebServer_ISP2_IP_ADDRESS %>
 ns-cache IN      A       <%= $CachingDNSServer_IP_ADDRESS %>
 www      IN      CNAME   shiba.sitict.net.

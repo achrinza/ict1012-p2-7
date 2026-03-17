@@ -6,10 +6,6 @@ hostname DSW2
 <% CommonConfigAll 98 %>
 <% CommonConfigDSW %>
 
-! === VLAN Database ===
-vlan <%= $VLAN_DSW2_R1_R2_ID %>
- name <%= $VLAN_DSW2_R1_R2_NAME %>_Link
-
 ! === Trunk Ports to Access Switches ===
 interface range g1/0/1-8
  switchport mode trunk
@@ -156,9 +152,13 @@ interface vlan <%= $VLAN_MGMT_ID %>
  ip access-group NetMgmt_Outbound out
 exit
 
+interface vlan <%= $VLAN_DSW1_R1_R2_ID %>
+ ip address <%= $VLAN_DSW1_R1_R2_THIRD_HOST %> <%= $VLAN_DSW1_R1_R2_SUBNET_MASK %>
+exit
+
 interface vlan <%= $VLAN_DSW2_R1_R2_ID %>
  ip address <%= $VLAN_DSW2_R1_R2_SECOND_HOST %> <%= $VLAN_DSW2_R1_R2_SUBNET_MASK %>
- no shutdown
+exit
 
 ! === Access Ports to Routers (uses VLAN SVI method) ===
 ! g1/0/23 -> R1 (VLAN <%= $VLAN_DSW2_R1_R2_ID %>)
@@ -201,6 +201,7 @@ spanning-tree vlan 10,30,50,60 root secondary
 router ospf 1
  router-id <%= $DSW2Mgmt_IP_ADDRESS %>
  passive-interface default
+ no passive-interface vlan<%= $VLAN_DSW1_R1_R2_ID %>
  no passive-interface vlan<%= $VLAN_DSW2_R1_R2_ID %>
  network <%= $PRIVATE_NETWORK_SUBNET_ADDRESS %> <%= $PRIVATE_NETWORK_NETWORK_WILDCARD %> area 0
 exit

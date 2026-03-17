@@ -16,6 +16,19 @@ $ORIGIN <% printf '%s' "$PRIVATE_NETWORK_SUBNET_ADDRESS" | awk -F. '{ORS=""; pri
          IN      NS      ns-cache.shiba.sitict.net.
 188      IN      PTR     ns-cache.shiba.sitict.net.
 
+
+<%= last_octet $AuthoritativeDNSServer_IP_ADDRESS %>                 IN      PTR       ns1.internal.office1.sihba.sitict.net.
+<%= last_octet $AuthoritativeDNSServer_IP_ADDRESS %>                 IN      PTR       ns2.internal.office1.sihba.sitict.net.
+<%= last_octet $AuthoritativeDNSServer_ISP1_IP_ADDRESS %>            IN      PTR       ns1.isp1.office1.sihba.sitict.net.
+<%= last_octet $AuthoritativeDNSServer_ISP2_IP_ADDRESS %>            IN      PTR       ns2.isp2.office1.sihba.sitict.net.
+
+<%= last_octet $WebServer_IP_ADDRESS %>                 IN      PTR       www.internal.office1.shiba.sitict.net.
+<%= last_octet $WebServer_ISP1_IP_ADDRESS %>            IN      PTR       www.isp1.office1.sihba.sitict.net.
+<%= last_octet $WebServer_ISP2_IP_ADDRESS %>            IN      PTR       www.isp2.office1.sihba.sitict.net.
+
+<%= last_octet $CachingDNSServer_IP_ADDRESS  %>         IN      PTR        ns-cache.internal.office1.shiba.sitict.net
+<%= last_octet $DHCPServer_IP_ADDRESS  %f>              IN      PTR        dhcp.internal.office1.shiba.sitict.net
+
 <% last_octet $ISP1_ROUTER_IP %>                        IN      PTR       r1.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
 <% last_octet $VLAN_DSW1_R1_R2_DEFAULT_GATEWAY %>       IN      PTR       r1.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
 <% last_octet $VLAN_DSW2_R1_R2_FIRST_HOST %>            IN      PTR       r1.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
