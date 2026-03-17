@@ -17,12 +17,12 @@ $ORIGIN <% printf '%s' "$PRIVATE_NETWORK_SUBNET_ADDRESS" | awk -F. '{ORS=""; pri
 188      IN      PTR     ns-cache.shiba.sitict.net.
 
 <% last_octet $ISP1_ROUTER_IP %>                        IN      PTR       r1.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
-<% last_octet $VLAN_CSW1_R1_R2_DEFAULT_GATEWAY %>       IN      PTR       r1.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
-<% last_octet $VLAN_CSW2_R1_R2_FIRST_HOST %>            IN      PTR       r1.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
+<% last_octet $VLAN_DSW1_R1_R2_DEFAULT_GATEWAY %>       IN      PTR       r1.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
+<% last_octet $VLAN_DSW2_R1_R2_FIRST_HOST %>            IN      PTR       r1.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
 
 <% last_octet $ISP2_ROUTER_IP %>                        IN      PTR       r2.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
-<% last_octet $VLAN_CSW1_R1_R2_FIRST_HOST %>            IN      PTR       r2.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
-<% last_octet $VLAN_CSW2_R1_R2_DEFAULT_GATEWAY %>       IN      PTR       r2.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
+<% last_octet $VLAN_DSW1_R1_R2_FIRST_HOST %>            IN      PTR       r2.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
+<% last_octet $VLAN_DSW2_R1_R2_DEFAULT_GATEWAY %>       IN      PTR       r2.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
 
 <% last_octet $VLAN_MeetingRooms_DEFAULT_GATEWAY %>     IN      PTR       csw-vip.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
 <% last_octet $VLAN_NetworkMGMT_DEFAULT_GATEWAY %>      IN      PTR       csw-vip.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
@@ -35,7 +35,7 @@ $ORIGIN <% printf '%s' "$PRIVATE_NETWORK_SUBNET_ADDRESS" | awk -F. '{ORS=""; pri
 <% last_octet $VLAN_InternalServices_DEFAULT_GATEWAY %> IN      PTR       csw-vip.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
 <% last_octet $VLAN_MGMT_DEFAULT_GATEWAY %>             IN      PTR       csw-vip.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
          
-<% last_octet $VLAN_CSW1_R1_R2_SECOND_HOST %>           IN      PTR       csw1.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
+<% last_octet $VLAN_DSW1_R1_R2_SECOND_HOST %>           IN      PTR       csw1.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
 <% last_octet $VLAN_MeetingRooms_SVI1 %>                IN      PTR       csw1.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
 <% last_octet $VLAN_NetworkMGMT_SVI1 %>                 IN      PTR       csw1.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
 <% last_octet $VLAN_CustomerService_SVI1 %>             IN      PTR       csw1.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
@@ -45,9 +45,9 @@ $ORIGIN <% printf '%s' "$PRIVATE_NETWORK_SUBNET_ADDRESS" | awk -F. '{ORS=""; pri
 <% last_octet $VLAN_CompanyMgmt_SVI1 %>                 IN      PTR       csw1.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
 <% last_octet $VLAN_DMZ_SVI1 %>                         IN      PTR       csw1.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
 <% last_octet $VLAN_InternalServices_SVI1 %>            IN      PTR       csw1.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
-<% last_octet $CSW1Mgmt_IP_ADDRESS %>                   IN      PTR       csw1.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
+<% last_octet $DSW1Mgmt_IP_ADDRESS %>                   IN      PTR       csw1.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
 
-<% last_octet $VLAN_CSW2_R1_R2_SECOND_HOST %>           IN      PTR       csw2.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
+<% last_octet $VLAN_DSW2_R1_R2_SECOND_HOST %>           IN      PTR       csw2.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
 <% last_octet $VLAN_MeetingRooms_SVI2 %>                IN      PTR       csw2.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
 <% last_octet $VLAN_NetworkMGMT_SVI2 %>                 IN      PTR       csw2.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
 <% last_octet $VLAN_CustomerService_SVI2 %>             IN      PTR       csw2.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
@@ -57,7 +57,7 @@ $ORIGIN <% printf '%s' "$PRIVATE_NETWORK_SUBNET_ADDRESS" | awk -F. '{ORS=""; pri
 <% last_octet $VLAN_CompanyMgmt_SVI2 %>                 IN      PTR       csw2.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
 <% last_octet $VLAN_DMZ_SVI2 %>                         IN      PTR       csw2.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
 <% last_octet $VLAN_InternalServices_SVI2 %>            IN      PTR       csw2.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
-<% last_octet $CSW2Mgmt_IP_ADDRESS %>                   IN      PTR       csw2.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
+<% last_octet $DSW2Mgmt_IP_ADDRESS %>                   IN      PTR       csw2.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
 
 <% last_octet $SW1Mgmt_IP_ADDRESS %>                    IN      PTR       sw1.<%= $DOMAIN_SUFFIX_NET_MGMT %>.
 <% last_octet $SW2Mgmt_IP_ADDRESS %>                    IN      PTR       sw2.<%= $DOMAIN_SUFFIX_NET_MGMT %>.

@@ -18,48 +18,53 @@ int range g1/0/1-3
   switchport mode access
   switchport nonegotiate
   switchport access vlan <%= $VLAN_NetworkMGMT_ID %>
+exit
 
 ! (HR Executive Level 3)
 interface range g1/0/2-3
   switchport mode access
   switchport nonegotiate
   switchport access vlan <%= $VLAN_HumanResources_ID %>
-  
+exit
+
 ! (Solutions Developers Department Level 3)
 interface range g1/0/5-9
   switchport mode access
   switchport nonegotiate
   switchport access vlan <%= $VLAN_SolutionDevs_ID %>
-  
+exit
+
 ! (Large Meeting Room on Level 4)
 interface range g1/0/10-20
   switchport mode access
   switchport nonegotiate
   switchport access vlan <%= $VLAN_MeetingRooms_ID %>
+exit
 
 ! Trunking Configs & EtherChannel LACP
-interface g1/0/21,g1/0/23
-  switchport mode trunk
+
+interface range g1/0/21,g1/0/23
   channel-group 5 mode passive
-  no shutdown
+exit
 
 interface port-channel 5
   spanning-tree bpduguard disable  
   switchport mode trunk
   switchport nonegotiate
-
+exit
 
 interface range g1/0/22,g1/0/24
-  switchport mode trunk
   channel-group 6 mode passive
-  no shutdown
+exit
 
 interface port-channel 6
   spanning-tree bpduguard disable  
   switchport mode trunk
   switchport nonegotiate
-  
+exit
+
 interface range g1/1/1-4
   shutdown
+exit
 
 end

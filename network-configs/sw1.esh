@@ -19,47 +19,50 @@ interface g1/0/1
   switchport mode access
   switchport nonegotiate
   switchport access vlan <%= $VLAN_NetworkMGMT_ID %>
+exit
 
 interface g1/0/2
   switchport mode access
   switchport nonegotiate
   switchport access vlan <%= $VLAN_SolutionDevs_ID %>
+exit
 
 interface range g1/0/3-14
   switchport mode access
   switchport nonegotiate
   switchport access vlan <%= $VLAN_CustomerService_ID %>
+exit
 
 interface range g1/0/15-20
   switchport mode access
   switchport nonegotiate
   switchport access vlan <%= $VLAN_MeetingRooms_ID %>
-
+exit
 
 ! Trunking Configs & EtherChannel LACP
-interface g1/0/21,g1/0/23
-  switchport mode trunk
+
+interface range g1/0/21,g1/0/23
   channel-group 1 mode passive
-  no shutdown
+exit
 
 interface port-channel 1
   spanning-tree bpduguard disable  
   switchport mode trunk
   switchport nonegotiate
-
+exit
 
 interface range g1/0/22,g1/0/24
-  switchport mode trunk
   channel-group 2 mode passive
-  no shutdown
+exit
 
 interface port-channel 2
   spanning-tree bpduguard disable  
   switchport mode trunk
   switchport nonegotiate
-  
-  
+exit
+
 interface range g1/1/1-4
   shutdown
+exit
 
 end

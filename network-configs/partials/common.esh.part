@@ -37,7 +37,7 @@ exit
 EOF
 }
 
-CommonConfigCSW () {
+CommonConfigDSW () {
   cat <<EOF
 ! === Access List ===
 ip access-list extended DMZ_Outbound

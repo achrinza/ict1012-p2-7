@@ -12,29 +12,29 @@ ip access-list standard DMZ_ISP2_Steering_Sources
  20 permit host <%= $WebServer_ISP2_IP_ADDRESS %>
 exit
 
-route-map DMZ_ISP2_CSW1_Steering_Policy permit 10
+route-map DMZ_ISP2_DSW1_Steering_Policy permit 10
  match ip address DMZ_ISP2_Steering_Sources
- set ip next-hop <%= $VLAN_CSW1_R1_R2_FIRST_HOST %>
+ set ip next-hop <%= $VLAN_DSW1_R1_R2_FIRST_HOST %>
 exit
 
-route-map DMZ_ISP2_CSW2_Steering_Policy permit 10
+route-map DMZ_ISP2_DSW2_Steering_Policy permit 10
  match ip address DMZ_ISP2_Steering_Sources
- set ip next-hop <%= $VLAN_CSW2_R1_R2_DEFAULT_GATEWAY %>
+ set ip next-hop <%= $VLAN_DSW2_R1_R2_DEFAULT_GATEWAY %>
 exit
 
-! === LAN-side: to CSW1 (VLAN <%= $VLAN_CSW1_R1_R2_NAME %>: <%= $VLAN_CSW1_R1_R2_SUBNET_ADDRESS %><%= $VLAN_CSW1_R1_R2_SUBNET_PREFIX_LENGTH %>) ===
+! === LAN-side: to DSW1 (VLAN <%= $VLAN_DSW1_R1_R2_NAME %>: <%= $VLAN_DSW1_R1_R2_SUBNET_ADDRESS %><%= $VLAN_DSW1_R1_R2_SUBNET_PREFIX_LENGTH %>) ===
 interface g0/0/0
- ip address <%= $VLAN_CSW1_R1_R2_DEFAULT_GATEWAY %> <%= $VLAN_CSW1_R1_R2_SUBNET_MASK %>
+ ip address <%= $VLAN_DSW1_R1_R2_DEFAULT_GATEWAY %> <%= $VLAN_DSW1_R1_R2_SUBNET_MASK %>
  ip nat inside
- ip policy route-map DMZ_ISP2_CSW1_Steering_Policy
+ ip policy route-map DMZ_ISP2_DSW1_Steering_Policy
  no shutdown
 exit
 
-! === LAN-side: to CSW2 (VLAN <%= $VLAN_CSW2_R1_R2_NAME %>: <%= $VLAN_CSW2_R1_R2_SUBNET_ADDRESS %><%= $VLAN_CSW2_R1_R2_SUBNET_PREFIX_LENGTH %>) ===
+! === LAN-side: to DSW2 (VLAN <%= $VLAN_DSW2_R1_R2_NAME %>: <%= $VLAN_DSW2_R1_R2_SUBNET_ADDRESS %><%= $VLAN_DSW2_R1_R2_SUBNET_PREFIX_LENGTH %>) ===
 interface g0/0/1
- ip address <%= $VLAN_CSW2_R1_R2_FIRST_HOST %> <%= $VLAN_CSW2_R1_R2_SUBNET_MASK %>
+ ip address <%= $VLAN_DSW2_R1_R2_FIRST_HOST %> <%= $VLAN_DSW2_R1_R2_SUBNET_MASK %>
  ip nat inside
- ip policy route-map DMZ_ISP2_CSW2_Steering_Policy
+ ip policy route-map DMZ_ISP2_DSW2_Steering_Policy
  no shutdown
 exit
 

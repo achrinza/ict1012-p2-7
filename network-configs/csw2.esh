@@ -1,14 +1,14 @@
 enable
 configure terminal
-hostname CSW2
+hostname DSW2
 
 <%+ ./partials/common.esh.part %>
 <% CommonConfigAll 98 %>
-<% CommonConfigCSW %>
+<% CommonConfigDSW %>
 
 ! === VLAN Database ===
-vlan <%= $VLAN_CSW2_R1_R2_ID %>
- name <%= $VLAN_CSW2_R1_R2_NAME %>_Link
+vlan <%= $VLAN_DSW2_R1_R2_ID %>
+ name <%= $VLAN_DSW2_R1_R2_NAME %>_Link
 
 ! === Trunk Ports to Access Switches ===
 interface range g1/0/1-8
@@ -59,7 +59,7 @@ interface port-channel 8
  switchport mode trunk
  switchport nonegotiate
 
-! === Trunk to CSW1 (inter-core link) ===
+! === Trunk to DSW1 (inter-core link) ===
 interface g1/0/22
  switchport mode trunk
  switchport nonegotiate
@@ -156,24 +156,24 @@ interface vlan <%= $VLAN_MGMT_ID %>
  ip access-group NetMgmt_Outbound out
 exit
 
-interface vlan <%= $VLAN_CSW2_R1_R2_ID %>
- ip address <%= $VLAN_CSW2_R1_R2_SECOND_HOST %> <%= $VLAN_CSW2_R1_R2_SUBNET_MASK %>
+interface vlan <%= $VLAN_DSW2_R1_R2_ID %>
+ ip address <%= $VLAN_DSW2_R1_R2_SECOND_HOST %> <%= $VLAN_DSW2_R1_R2_SUBNET_MASK %>
  no shutdown
 
 ! === Access Ports to Routers (uses VLAN SVI method) ===
-! g1/0/23 -> R1 (VLAN <%= $VLAN_CSW2_R1_R2_ID %>)
+! g1/0/23 -> R1 (VLAN <%= $VLAN_DSW2_R1_R2_ID %>)
 interface g1/0/23
  switchport mode access
  switchport nonegotiate
- switchport access vlan <%= $VLAN_CSW2_R1_R2_ID %>
+ switchport access vlan <%= $VLAN_DSW2_R1_R2_ID %>
  no shutdown
 exit
 
-! g1/0/24 -> R2 (VLAN <%= $VLAN_CSW2_R1_R2_ID %>)
+! g1/0/24 -> R2 (VLAN <%= $VLAN_DSW2_R1_R2_ID %>)
 interface g1/0/24
  switchport mode access
  switchport nonegotiate
- switchport access vlan <%= $VLAN_CSW2_R1_R2_ID %>
+ switchport access vlan <%= $VLAN_DSW2_R1_R2_ID %>
  no shutdown
 exit
 
@@ -193,11 +193,15 @@ interface range g1/0/10
  no shutdown
 exit
 
+! === Spanning Tree Root Balancing ===
+spanning-tree vlan 20,40,70,80,90,120 root primary
+spanning-tree vlan 10,30,50,60 root secondary
+
 ! === OSPF Area 0 ===
 router ospf 1
- router-id <%= $CSW2Mgmt_IP_ADDRESS %>
+ router-id <%= $DSW2Mgmt_IP_ADDRESS %>
  passive-interface default
- no passive-interface vlan<%= $VLAN_CSW2_R1_R2_ID %>
+ no passive-interface vlan<%= $VLAN_DSW2_R1_R2_ID %>
  network <%= $PRIVATE_NETWORK_SUBNET_ADDRESS %> <%= $PRIVATE_NETWORK_NETWORK_WILDCARD %> area 0
 exit
 
